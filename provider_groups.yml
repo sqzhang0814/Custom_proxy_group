@@ -3,7 +3,7 @@ proxy-providers:
   IPCL:
     type: http
     url: "https://mysub.cc/subscribe/1349/eZuZhFy1ZD/clash/"
-    interval: 7200          # 每 2 小时自动更新
+    interval: 7200
     path: ./providers/ipcl.yaml
     health-check:
       enable: true
@@ -134,15 +134,12 @@ proxy-groups:
     type: smart
     policy-priority: "IPCL:1.2;IMM:0.8"
     filter: "(?i)香港|HKG|HK"
-    use:
-      - IPCL
-      - IMM
+    use: [IPCL, IMM]
 
-
-######## 4. alias groups so ACL4SSR rules can find them ########
+######## 4. alias groups — 兼容 ACL4SSR 旧名称 ########
   - name: "🇭🇰 香港节点"
     type: select
-    proxies: [ "🇭🇰 IPCL-HK", "🇭🇰 IMM-HK" ]   # 任选其一／手动切换
+    proxies: [ "🇭🇰 IPCL-HK", "🇭🇰 IMM-HK" ]
 
   - name: "🇯🇵 日本节点"
     type: select
