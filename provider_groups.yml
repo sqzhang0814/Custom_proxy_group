@@ -1,0 +1,69 @@
+######## 1. 订阅拆分 —— proxy-providers ########
+proxy-providers:
+  IPCL:
+    type: http
+    url: "https://mysub.cc/subscribe/1349/eZuZhFy1ZD/clash/"
+    interval: 7200                # 每 2 小时自动更新
+    path: ./providers/ipcl.yaml
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 600
+
+  IMM:
+    type: http
+    url: "https://api.immtel.co/?L1N1YnNjcmlwdGlvbi9DbGFzaD90Zm89MSZ0PTIwMjImc2lkPTIxMjg4JnRva2VuPU9wWThzdnhxTkIzJm1tPTMxMzc0JjRiM2E1ZDk4YzM2MTQ1NmY5ZDA0YjA2NTM1"
+    interval: 7200
+    path: ./providers/imm.yaml
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 600
+
+######## 2. 分机场分地区 —— url-test 组 ########
+proxy-groups:
+  ## —— IPCL —— ##
+  - {name: "🇭🇰 IPCL-HK", type: url-test, url: http://www.gstatic.com/generate_204,
+     interval: 300, tolerance: 50, filter: "(?i)香港|HK",   use: [IPCL]}
+  - {name: "🇹🇼 IPCL-TW", type: url-test, url: http://www.gstatic.com/generate_204,
+     interval: 300, tolerance: 50, filter: "(?i)台湾|TW",   use: [IPCL]}
+  - {name: "🇸🇬 IPCL-SG", type: url-test, url: http://www.gstatic.com/generate_204,
+     interval: 300, tolerance: 50, filter: "(?i)新加坡|SG", use: [IPCL]}
+  - {name: "🇯🇵 IPCL-JP", type: url-test, url: http://www.gstatic.com/generate_204,
+     interval: 300, tolerance: 50, filter: "(?i)日本|JP",   use: [IPCL]}
+  - {name: "🇺🇸 IPCL-US", type: url-test, url: http://www.gstatic.com/generate_204,
+     interval: 300, tolerance: 50, filter: "(?i)美国|US",   use: [IPCL]}
+  - {name: "🇰🇷 IPCL-KR", type: url-test, url: http://www.gstatic.com/generate_204,
+     interval: 300, tolerance: 50, filter: "(?i)韩国|KR",   use: [IPCL]}
+
+  ## —— IMM —— ##
+  - {name: "🇭🇰 IMM-HK", type: url-test, url: http://www.gstatic.com/generate_204,
+     interval: 300, tolerance: 50, filter: "(?i)HKG", use: [IMM]}
+  - {name: "🇹🇼 IMM-TW", type: url-test, url: http://www.gstatic.com/generate_204,
+     interval: 300, tolerance: 50, filter: "(?i)TWN", use: [IMM]}
+  - {name: "🇸🇬 IMM-SG", type: url-test, url: http://www.gstatic.com/generate_204,
+     interval: 300, tolerance: 50, filter: "(?i)SGP", use: [IMM]}
+  - {name: "🇯🇵 IMM-JP", type: url-test, url: http://www.gstatic.com/generate_204,
+     interval: 300, tolerance: 50, filter: "(?i)JPN", use: [IMM]}
+  - {name: "🇺🇸 IMM-US", type: url-test, url: http://www.gstatic.com/generate_204,
+     interval: 300, tolerance: 50, filter: "(?i)USA", use: [IMM]}
+  - {name: "🇰🇷 IMM-KR", type: url-test, url: http://www.gstatic.com/generate_204,
+     interval: 300, tolerance: 50, filter: "(?i)KOR", use: [IMM]}
+
+######## 3. 合并策略（可选） ########
+  - name: "🇭🇰 香港-AUTO"       # 延迟最佳香港节点
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 120
+    tolerance: 50
+    proxies:
+      - 🇭🇰 IPCL-HK
+      - 🇭🇰 IMM-HK
+
+  - name: "Smart-HK-Weight"    # Smart + 权重示例
+    type: smart
+    policy-priority: "IPCL:1.2;IMM:0.8" # IPCL 权重 ↑, IMM ↓
+    filter: "(?i)香港|HKG|HK"
+    use:
+      - IPCL
+      - IMM
