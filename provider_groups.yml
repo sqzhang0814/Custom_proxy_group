@@ -137,3 +137,29 @@ proxy-groups:
     use:
       - IPCL
       - IMM
+
+
+######## 4. alias groups so ACL4SSR rules can find them ########
+  - name: "🇭🇰 香港节点"
+    type: select
+    proxies: [ "🇭🇰 IPCL-HK", "🇭🇰 IMM-HK" ]   # 任选其一／手动切换
+
+  - name: "🇯🇵 日本节点"
+    type: select
+    proxies: [ "🇯🇵 IPCL-JP", "🇯🇵 IMM-JP" ]
+
+  - name: "🇺🇲 美国节点"
+    type: select
+    proxies: [ "🇺🇸 IPCL-US", "🇺🇸 IMM-US" ]
+
+  - name: "🇨🇳 台湾节点"
+    type: select
+    proxies: [ "🇹🇼 IPCL-TW", "🇹🇼 IMM-TW" ]
+
+  - name: "🇸🇬 狮城节点"
+    type: select
+    proxies: [ "🇸🇬 IPCL-SG", "🇸🇬 IMM-SG" ]
+
+  - name: "🇰🇷 韩国节点"
+    type: select
+    proxies: [ "🇰🇷 IPCL-KR", "🇰🇷 IMM-KR" ]
